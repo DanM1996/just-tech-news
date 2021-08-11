@@ -20,10 +20,21 @@ router.get('/:id', (req, res) => {
     // findOne would look like SELECT * FROM users WHERE id = 1
     User.findOne({
         attributes: { exclude: ['password'] },
+        where: {
+            id: req.params.id
+        },
         include: [
             {
-              model: Post,
-              attributes: ['id', 'title', 'post_url', 'created_at']
+                model: Post,
+                attributes: ['id', 'title', 'post_url', 'created_at']
+              },
+            {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
+                include: {
+                    model: User,
+                    attributes: ['username']
+                }
             },
             {
               model: Post,
@@ -32,9 +43,7 @@ router.get('/:id', (req, res) => {
               as: 'voted_posts'
             }
           ],
-        where: {
-            id: req.params.id
-        }
+        
     })
         .then(dbUserData => {
             if (!dbUserData) {
