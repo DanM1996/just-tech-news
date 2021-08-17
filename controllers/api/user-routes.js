@@ -83,7 +83,7 @@ router.post('/', withAuth, (req, res) => {
     });
 
 // use post instead of get since data is transferred more securely in req.body rather than the url
-router.post('/login', withAuth, (req, res) => {
+router.post('/login', (req, res) => {
     User.findOne({
       where: {
         email: req.body.email
